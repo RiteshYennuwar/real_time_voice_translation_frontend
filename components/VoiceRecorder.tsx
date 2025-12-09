@@ -145,6 +145,14 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       // Reset audio chunks
       audioChunksRef.current = [];
 
+      // Check if mediaDevices is available (requires secure context)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          'Microphone access not available. Please ensure you are using localhost or HTTPS. ' +
+          'If using 127.0.0.1, try switching to localhost:3000 instead.'
+        );
+      }
+
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -197,7 +205,35 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
     } catch (error) {
       console.error('Error starting recording:', error);
-      if (onError) onError('Failed to access microphone');
+      
+      // Provide specific error messages based on the error type
+      let errorMessage = 'Failed to access microphone';
+      
+      if (error instanceof DOMException) {
+        switch (error.name) {
+          case 'NotAllowedError':
+            errorMessage = 'Microphone permission denied. Please allow microphone access in your browser settings.';
+            break;
+          case 'NotFoundError':
+            errorMessage = 'No microphone found. Please connect a microphone and try again.';
+            break;
+          case 'NotReadableError':
+            errorMessage = 'Microphone is in use by another application. Please close other apps using the mic.';
+            break;
+          case 'OverconstrainedError':
+            errorMessage = 'Could not satisfy audio constraints. Try using a different microphone.';
+            break;
+          case 'SecurityError':
+            errorMessage = 'Microphone access blocked. Please use HTTPS or localhost.';
+            break;
+          default:
+            errorMessage = `Microphone error: ${error.message}`;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      if (onError) onError(errorMessage);
     }
   };
 
