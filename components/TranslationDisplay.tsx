@@ -31,6 +31,8 @@ export const TranslationDisplay: React.FC<TranslationDisplayProps> = ({
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const audioQueueRef = useRef<Array<{ audioBase64: string; index: number }>>([]);
+  const isPlayingQueueRef = useRef(false);
 
   // Auto-scroll to latest result
   useEffect(() => {
@@ -38,6 +40,69 @@ export const TranslationDisplay: React.FC<TranslationDisplayProps> = ({
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [results]);
+
+  // Auto-play new results in sequence
+  useEffect(() => {
+    if (results.length > 0) {
+      const latestResult = results[results.length - 1];
+      const latestIndex = results.length - 1;
+      
+      // Add to queue
+      audioQueueRef.current.push({
+        audioBase64: latestResult.audio_base64,
+        index: latestIndex
+      });
+      
+      // Start playing queue if not already playing
+      if (!isPlayingQueueRef.current) {
+        playNextInQueue();
+      }
+    }
+  }, [results.length]);
+
+  const playNextInQueue = () => {
+    if (audioQueueRef.current.length === 0) {
+      isPlayingQueueRef.current = false;
+      setPlayingIndex(null);
+      return;
+    }
+
+    isPlayingQueueRef.current = true;
+    const { audioBase64, index } = audioQueueRef.current.shift()!;
+    
+    try {
+      // Stop current audio if playing
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+
+      // Create audio from base64
+      const audioData = `data:audio/wav;base64,${audioBase64}`;
+      const audio = new Audio(audioData);
+      
+      audioRef.current = audio;
+      setPlayingIndex(index);
+
+      audio.onended = () => {
+        // Play next in queue
+        playNextInQueue();
+      };
+
+      audio.onerror = () => {
+        console.error('Error playing audio');
+        // Continue to next in queue
+        playNextInQueue();
+      };
+
+      audio.play().catch(err => {
+        console.error('Error starting playback:', err);
+        playNextInQueue();
+      });
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      playNextInQueue();
+    }
+  };
 
   const playAudio = (audioBase64: string, index: number) => {
     try {
