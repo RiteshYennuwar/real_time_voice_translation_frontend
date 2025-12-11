@@ -70,7 +70,23 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
     socket.on('translation_result', (result: TranslationResult) => {
       console.log('📝 Translation:', result.original_text, '→', result.translated_text);
+      
+      // Auto-track metrics for every translation (not just final)
+      fetch(`${API_URL}/api/evaluation/auto-track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          confidence: result.confidence,
+          latency_ms: result.latency_ms,
+          original_text: result.original_text,
+          translated_text: result.translated_text
+        })
+      }).then(() => {
+        console.log('📊 Metrics tracked (ASR, MT, TTS)');
+      }).catch(err => console.warn('Failed to track metrics:', err));
+      
       onTranslation(result);
+      
       if (result.is_final) {
         setIsProcessing(false);
       }

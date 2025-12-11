@@ -1,9 +1,10 @@
 "use client"
 
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import { VoiceRecorder } from '../components/VoiceRecorder';
 import { TranslationDisplay } from '../components/TranslationDisplay';
+import EvaluationMetrics from '../components/EvaluationMetrics';
 
 interface TranslationResult {
   original_text: string;
@@ -28,6 +29,7 @@ export default function Home() {
   const [results, setResults] = useState<TranslationResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showStats, setShowStats] = useState(false);
+  const [showEvaluation, setShowEvaluation] = useState(false);
 
   const handleTranslation = (result: TranslationResult) => {
     setResults(prev => [...prev, result]);
@@ -77,13 +79,34 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
-            🎙️ Voice Translation
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Real-time speech translation powered by AI
-          </p>
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-1"></div>
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+                🎙️ Voice Translation
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Real-time speech translation powered by AI
+              </p>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <button
+                onClick={() => setShowEvaluation(!showEvaluation)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
+              >
+                <span>📊</span>
+                <span className="hidden sm:inline">{showEvaluation ? 'Hide' : 'Show'} Metrics</span>
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Evaluation Metrics Section */}
+        {showEvaluation && (
+          <div className="mb-8">
+            <EvaluationMetrics />
+          </div>
+        )}
 
         {/* Language Selector Card */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
