@@ -5,17 +5,7 @@ import Head from 'next/head';
 import { VoiceRecorder } from '../components/VoiceRecorder';
 import { TranslationDisplay } from '../components/TranslationDisplay';
 import EvaluationMetrics from '../components/EvaluationMetrics';
-
-interface TranslationResult {
-  original_text: string;
-  translated_text: string;
-  audio_base64: string;
-  sample_rate: number;
-  latency_ms: number;
-  confidence: number;
-  timestamp: number;
-  is_final?: boolean;
-}
+import { TranslationResult } from '../types/translation';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },

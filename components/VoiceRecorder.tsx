@@ -1,16 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-
-interface TranslationResult {
-  original_text: string;
-  translated_text: string;
-  audio_base64: string;
-  sample_rate: number;
-  latency_ms: number;
-  confidence: number;
-  timestamp: string;
-  is_final?: boolean;
-}
+import { TranslationResult } from '../types/translation';
 
 interface VoiceRecorderProps {
   sourceLang: string;
@@ -153,7 +143,7 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
           sample_rate: data.sample_rate,
           latency_ms: data.metrics.latency_ms,
           confidence: data.metrics.confidence,
-          timestamp: new Date().toISOString(),
+          timestamp: Date.now(),
           is_final: true
         };
         onTranslation(result);

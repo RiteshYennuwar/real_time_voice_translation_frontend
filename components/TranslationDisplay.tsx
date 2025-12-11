@@ -1,15 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-
-interface TranslationResult {
-  original_text: string;
-  translated_text: string;
-  audio_base64: string;
-  sample_rate: number;
-  latency_ms: number;
-  confidence: number;
-  timestamp: number;
-  is_final?: boolean;
-}
+import { useState, useEffect, useRef } from 'react';
+import { TranslationResult } from '../types/translation';
 
 interface TranslationDisplayProps {
   results: TranslationResult[];
