@@ -1,3 +1,6 @@
+# FOR NOW PLEASE ACCESS THE HOSTED VERSION FROM HERE https://real-time-voice-translation-frontend.onrender.com AND MAKE SURE THE BACKEND IS RUNNING ON http://localhost:5000
+# OR PLEASE FOLLOW THE INSTRUCTIONS TO INSTALL THE FRONTEND LOCALLY
+
 # Real-Time Voice Translation Frontend
 
 Frontend web application for the real-time voice translation system built with Next.js 16, React, and TypeScript. Provides an intuitive interface for recording audio, viewing translations, and monitoring evaluation metrics.
