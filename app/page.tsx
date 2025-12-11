@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { VoiceRecorder } from '../components/VoiceRecorder';
 import { TranslationDisplay } from '../components/TranslationDisplay';
 import EvaluationMetrics from '../components/EvaluationMetrics';
-import { TranslationResult } from '../types/translation';
+import { TranslationResult } from '@/types/translation';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },

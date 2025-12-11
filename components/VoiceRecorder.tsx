@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { TranslationResult } from '../types/translation';
+import { TranslationResult } from '@/types/translation';
 
 interface VoiceRecorderProps {
   sourceLang: string;

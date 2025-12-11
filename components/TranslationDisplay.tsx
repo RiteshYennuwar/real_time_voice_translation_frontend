@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { TranslationResult } from '../types/translation';
+import { TranslationResult } from '@/types/translation';
 
 interface TranslationDisplayProps {
   results: TranslationResult[];
