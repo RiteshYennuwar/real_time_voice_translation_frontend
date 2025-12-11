@@ -42,7 +42,7 @@ npm install
 
 **Note**: This will install all required packages including Next.js, React, Socket.IO client, and Tailwind CSS.
 
-### 3. Configure Backend URL (Optional)
+### 3. Configure Backend URL
 
 If your backend is running on a different URL, update the API endpoint in `components/VoiceRecorder.tsx`:
 
